@@ -46,14 +46,24 @@ namespace WindowsFormsApplication3
         Label[,] lb_adc;
         TextBox[,] adc_value;
         Label[] adc_addr;
+
+        Label[,] conf_lb_adc;
+        TextBox[,] conf_adc_value;
+        Label[] conf_adc_addr;
         //constantes double usadas no processo de calibração dos sensores
         double[,] a = new double[5, 4];
         double[,] b = new double[5, 4];
         double[,] c = new double[5, 4];
         double[,] d = new double[5, 4];
         double[,] e = new double[5, 4];
+
+        //constantes do anemometro separadas, pois o calculo é feito com base em Tquente e Tfrio
+        double cte_an_a, cte_an_b, cte_an_c, cte_an_d, cte_an_e = 0;
+        double delta_T, DT, min_delta, max_delta;
         double[,] valor_calibrado = new double[5, 4];
         double[,] media_amostras = new double[5, 4]; //integral das amostras
+        double media_anemometro = 0;
+        double valor_anemometro = 0;
         public ulong contador_amostras_validas = 0;
 
         /* variaveis utilizadas em gravacao */
@@ -61,7 +71,7 @@ namespace WindowsFormsApplication3
         public string header_gravacao = "Data (dd/mm/aaaa); Tempo (HH:mm:ss); Indice; Mao1_T1 (°C);Mao1_T2 (°C);Mao1_T3 (°C);Mao1_T4 (°C);Pe1_T1 (°C);Pe1_T2 (°C);Pe1_Umidade (%); Pe1_Vazio;Mao2_T1 (°C);Mao2_T2 (°C);Mao2_T3 (°C);Mao2_T4 (°C);Pe2_T1 (°C);Pe2_T2 (°C);Pe2_Umidade (%); Pe2_Vazio; Conf_Tar(°C); Conf_TGlobo (°C); Conf_Veloc.Ar (m/s); Conf_UR (%)";
         public string caminho_e_nome, nome_arquivo; //relativos ao nome do arquivo gravado
         StreamWriter log_arquivo; // cria uma classe com esse nome
-        
+
         //public int periodo_gravacao = 300000; //intervalo de gravacao em arquivo: 300k ms = 5 minutos
         public int periodo_gravacao = 60000; //intervalo de gravacao em arquivo: 60k ms = 1 minuto
         public int periodo_descoberta = 60000; //60k ms = 1m
@@ -231,8 +241,19 @@ namespace WindowsFormsApplication3
             c[4, 3] = 0;
             d[4, 3] = 47.64627406;
             e[4, 3] = -23.82075472;
-            /******************************************/
 
+            //Velocidade AR
+            //Constantes anemometro
+            cte_an_a = 7174.170478;
+            cte_an_b = -19800.386503;
+            cte_an_c = 15376.383562;
+            cte_an_d = 0;
+            cte_an_e = -2751.065609;
+
+            min_delta = 11.5;
+            max_delta = 28.3;
+
+            /******************************************/
             //Cria a interface
             lb_COM = new Label();
             lb_COM.Visible = true;
@@ -336,7 +357,7 @@ namespace WindowsFormsApplication3
             // timer_stop_nodeDiscovery
             // 
             timer_stop_nodeDiscovery = new System.Windows.Forms.Timer();
-            timer_stop_nodeDiscovery.Interval = periodo_descoberta; 
+            timer_stop_nodeDiscovery.Interval = periodo_descoberta;
             timer_stop_nodeDiscovery.Tick += new EventHandler(timer_stop_nodeDiscovery_Tick);
 
             // 
@@ -369,7 +390,7 @@ namespace WindowsFormsApplication3
             this.Controls.Add(btn_avancar);
             btn_avancar.Anchor = AnchorStyles.None;
             btn_avancar.Click += new System.EventHandler(this.btn_avancar_Click);
-            
+
             // 
             // label_buscando
             // 
@@ -471,7 +492,8 @@ namespace WindowsFormsApplication3
                 serialMestre.Close();
             }
 
-            try {
+            try
+            {
                 thr_busca.Abort();
                 flag_thread_busca = 0;
             } //mata a tread de busca quando inicia a thread de aquisicao
@@ -529,7 +551,8 @@ namespace WindowsFormsApplication3
         {
             if (listaGravacao.SelectedIndex != -1)
             {
-                switch (listaGravacao.SelectedIndex) {
+                switch (listaGravacao.SelectedIndex)
+                {
                     case 0:
                         multiplicador_gravacao = 5;
                         Console.WriteLine("ComboBox Gravacao");
@@ -697,7 +720,7 @@ namespace WindowsFormsApplication3
                                             this.Invoke((MethodInvoker)delegate
                                             {
                                                 addr[indice].BackColor = Color.Lime; // runs on UI thread
-                                                                                            });
+                                            });
                                             radio_serial_low.RemoveAt(j);
                                             temp_radiosRegistrados.RemoveAt(i);
                                             num_radios = num_radios - 1;
@@ -726,22 +749,23 @@ namespace WindowsFormsApplication3
                 }
 
             }
-            if (num_radios == 0 || stop_nodeDiscovery == true) { 
-            
-            this.Invoke((MethodInvoker)delegate
+            if (num_radios == 0 || stop_nodeDiscovery == true)
             {
-                timer_blink_busca.Stop();
-                timer_stop_nodeDiscovery.Stop();
-                label_buscando.Visible = true;
-                label_buscando.Text = "Rádios Encontrados";
-                label_buscando.Left = (this.ClientSize.Width - label_buscando.Width) / 2;
-                label_buscando.Top = (this.ClientSize.Height - 850);
-                label_buscando.TextAlign = ContentAlignment.MiddleCenter;
-                label_buscando.Dock = DockStyle.None;
-                
-                timer_espera_avancar.Start(); // runs on UI thread              
+
+                this.Invoke((MethodInvoker)delegate
+                {
+                    timer_blink_busca.Stop();
+                    timer_stop_nodeDiscovery.Stop();
+                    label_buscando.Visible = true;
+                    label_buscando.Text = "Rádios Encontrados";
+                    label_buscando.Left = (this.ClientSize.Width - label_buscando.Width) / 2;
+                    label_buscando.Top = (this.ClientSize.Height - 850);
+                    label_buscando.TextAlign = ContentAlignment.MiddleCenter;
+                    label_buscando.Dock = DockStyle.None;
+
+                    timer_espera_avancar.Start(); // runs on UI thread              
             });
-            
+
             }
         }
 
@@ -759,9 +783,13 @@ namespace WindowsFormsApplication3
 
             string porta_aberta = xbee_serial.PortName; // pega o nome da porta já aberta, recebido como parametro de função 
 
-            lb_adc = new Label[radios_registrados.Length, 4];
-            adc_value = new TextBox[radios_registrados.Length, 4];
+            lb_adc = new Label[radios_registrados.Length, 5];
+            adc_value = new TextBox[radios_registrados.Length, 5];
             adc_addr = new Label[radios_registrados.Length];
+
+            //conf_lb_adc = new Label[radios_registrados.Length, 5];
+            //conf_adc_value = new TextBox[radios_registrados.Length, 5];
+            //conf_adc_addr = new Label[radios_registrados.Length];
 
             int eixo_x = 45;
             int eixo_y = 150; //eixo y
@@ -783,58 +811,117 @@ namespace WindowsFormsApplication3
                     }
                 }
 
-                //label de endereços
-                adc_addr[i] = new Label();
-                adc_addr[i].Visible = true;
-                Console.WriteLine("IO: valor de i: ");
-                Console.Write(i.ToString());
-                Console.WriteLine("");
+                if (i == 4)
+                { //particularidade do confortimetro
+                    eixo_x = 545;
+                    eixo_y = eixo_y - 360;
+                    //label de endereços
+                    adc_addr[i] = new Label();
+                    adc_addr[i].Visible = true;
+                    Console.WriteLine("IO: valor de i: ");
+                    Console.Write(i.ToString());
+                    Console.WriteLine("");
 
-                //adc_addr[i].Text = "Rádio " + i.ToString() + ":" + radios_registrados[i];
-                adc_addr[i].AutoSize = true;
-                adc_addr[i].Text = descricao_radio[i] + ":" + radios_registrados[i];
-                adc_addr[i].Location = new Point(eixo_x, eixo_y - 30); //120
-                adc_addr[i].ForeColor = Color.Black;
-
-                this.Invoke((MethodInvoker)delegate
-                {
-                    this.Controls.Add(adc_addr[i]);
-                });
-                Console.WriteLine("IO: RADIOS REGISTRADOS: ");
-                Console.Write(radios_registrados[i]);
-                Console.WriteLine("");
-
-                for (int j = 0; j < 4; j++)
-                {
-                    lb_adc[i, j] = new Label();
-                    lb_adc[i, j].Name = "lb_adc_" + radios_registrados[i] + "_" + j.ToString();
-                    lb_adc[i, j].Location = new Point(eixo_x, eixo_y);
-                    lb_adc[i, j].Text = "ADC" + j.ToString();
-                    lb_adc[i, j].Visible = true;
-                    lb_adc[i, j].AutoSize = true;
-
-                    adc_value[i, j] = new TextBox();
-                    adc_value[i, j].Name = "tb_adc_" + radios_registrados[i] + "_" + j.ToString();
-                    adc_value[i, j].Location = new Point(eixo_x + 45, eixo_y);
-                    adc_value[i, j].Text = "";
-                    adc_value[i,j].TextAlign = HorizontalAlignment.Center;
-                    adc_value[i, j].Visible = true;
-                    adc_value[i, j].AutoSize = true;
-                    adc_value[i, j].ReadOnly = true;
-                    adc_value[i, j].BackColor = Color.White;
-                    adc_value[i, j].ForeColor = Color.Black;
-                    eixo_y = eixo_y + 45;
+                    //adc_addr[i].Text = "Rádio " + i.ToString() + ":" + radios_registrados[i];
+                    adc_addr[i].AutoSize = true;
+                    adc_addr[i].Text = descricao_radio[i] + ":" + radios_registrados[i];
+                    adc_addr[i].Location = new Point(eixo_x, eixo_y - 30); //120
+                    adc_addr[i].ForeColor = Color.Black;
 
                     this.Invoke((MethodInvoker)delegate
                     {
-                        this.Controls.Add(lb_adc[i, j]);
-                        this.Controls.Add(adc_value[i, j]);
+                        this.Controls.Add(adc_addr[i]);
                     });
+                    Console.WriteLine("IO: RADIOS REGISTRADOS: ");
+                    Console.Write(radios_registrados[i]);
+                    Console.WriteLine("");
+
+                    //j vai a 5 para mostar os dados do anemometro (vel. ar)
+                    for (int j = 0; j < 5; j++)
+                    {
+                        lb_adc[i, j] = new Label();
+                        lb_adc[i, j].Name = "lb_adc_" + radios_registrados[i] + "_" + j.ToString();
+                        lb_adc[i, j].Location = new Point(eixo_x, eixo_y);
+                        lb_adc[i, j].Text = "ADC" + j.ToString();
+                        lb_adc[i, j].Visible = true;
+                        lb_adc[i, j].AutoSize = true;
+
+                        adc_value[i, j] = new TextBox();
+                        adc_value[i, j].Name = "tb_adc_" + radios_registrados[i] + "_" + j.ToString();
+                        adc_value[i, j].Location = new Point(eixo_x + 45, eixo_y);
+                        adc_value[i, j].Text = "";
+                        adc_value[i, j].TextAlign = HorizontalAlignment.Center;
+                        adc_value[i, j].Visible = true;
+                        adc_value[i, j].AutoSize = true;
+                        adc_value[i, j].ReadOnly = true;
+                        adc_value[i, j].BackColor = Color.White;
+                        adc_value[i, j].ForeColor = Color.Black;
+                        eixo_y = eixo_y + 45;
+
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            this.Controls.Add(lb_adc[i, j]);
+                            this.Controls.Add(adc_value[i, j]);
+                        });
+
+                    }
 
                 }
+                else
+                {
+                    //label de endereços
+                    adc_addr[i] = new Label();
+                    adc_addr[i].Visible = true;
+                    Console.WriteLine("IO: valor de i: ");
+                    Console.Write(i.ToString());
+                    Console.WriteLine("");
 
+                    //adc_addr[i].Text = "Rádio " + i.ToString() + ":" + radios_registrados[i];
+                    adc_addr[i].AutoSize = true;
+                    adc_addr[i].Text = descricao_radio[i] + ":" + radios_registrados[i];
+                    adc_addr[i].Location = new Point(eixo_x, eixo_y - 30); //120
+                    adc_addr[i].ForeColor = Color.Black;
 
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        this.Controls.Add(adc_addr[i]);
+                    });
+                    Console.WriteLine("IO: RADIOS REGISTRADOS: ");
+                    Console.Write(radios_registrados[i]);
+                    Console.WriteLine("");
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        lb_adc[i, j] = new Label();
+                        lb_adc[i, j].Name = "lb_adc_" + radios_registrados[i] + "_" + j.ToString();
+                        lb_adc[i, j].Location = new Point(eixo_x, eixo_y);
+                        lb_adc[i, j].Text = "ADC" + j.ToString();
+                        lb_adc[i, j].Visible = true;
+                        lb_adc[i, j].AutoSize = true;
+
+                        adc_value[i, j] = new TextBox();
+                        adc_value[i, j].Name = "tb_adc_" + radios_registrados[i] + "_" + j.ToString();
+                        adc_value[i, j].Location = new Point(eixo_x + 45, eixo_y);
+                        adc_value[i, j].Text = "";
+                        adc_value[i, j].TextAlign = HorizontalAlignment.Center;
+                        adc_value[i, j].Visible = true;
+                        adc_value[i, j].AutoSize = true;
+                        adc_value[i, j].ReadOnly = true;
+                        adc_value[i, j].BackColor = Color.White;
+                        adc_value[i, j].ForeColor = Color.Black;
+                        eixo_y = eixo_y + 45;
+
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            this.Controls.Add(lb_adc[i, j]);
+                            this.Controls.Add(adc_value[i, j]);
+                        });
+
+                    }
+
+                }
             }
+            //fim da montagem da interface de aquisicao de amostras
 
             serialMestre = new SerialPort(porta_aberta, 9600, Parity.None, 8, StopBits.One); //padrão da serial 9600-8-N-1
             if (serialMestre.IsOpen) serialMestre.Close();
@@ -893,18 +980,21 @@ namespace WindowsFormsApplication3
                                     //incremento o contador de amostras somente se o pacote for integro
                                     contador_amostras_validas = contador_amostras_validas + 1;
                                 }
-
+                                //zera o checksum para a proxima iteracao
                                 checksum = 0;
 
                                 //limpa a string de dados recebidos
                                 sb_AT_Recv.Clear();
+
+                                //a amostra começa na posicao 38 do vetor RX_ANALOG_SAMPLES do rádio XBEE
                                 int amostra_inicial = 38;
                                 //itera o vetor de radios registrados para ver se o SL atual encontra-se neste vetor
-                                //melhorar essa busca
+
                                 for (int i = 0; i < radios_registrados.Length; i++)
                                 {
                                     int[,] adc_raw = new int[radios_registrados.Length, 4];
                                     double[,] adc_volt = new double[radios_registrados.Length, 4];
+
                                     if (radios_registrados[i] == radio_serial_low)
                                     {
                                         for (int j = 0; j < 4; j++)
@@ -922,6 +1012,7 @@ namespace WindowsFormsApplication3
                                           c[i, j] * adc_volt[i, j] * adc_volt[i, j] +
                                           d[i, j] * adc_volt[i, j] +
                                           e[i, j];
+
                                             valor_calibrado[i, j] = Math.Round(valor_calibrado[i, j], 3);
                                             media_amostras[i, j] = media_amostras[i, j] + valor_calibrado[i, j];
                                             Console.WriteLine("");
@@ -932,6 +1023,8 @@ namespace WindowsFormsApplication3
                                             Console.WriteLine("IO_SAMPLE: valor_calibrado:" + j.ToString());
                                             Console.WriteLine(valor_calibrado[i, j]);
 
+
+
                                             this.Invoke((MethodInvoker)delegate
                                             {
                                                 //preencher as coisas
@@ -940,6 +1033,40 @@ namespace WindowsFormsApplication3
 
                                             });
                                             amostra_inicial = amostra_inicial + 4;//itera entre as posicoes das amostras dentro do frame de dados
+                                        }
+
+                                        //se os dados encontrados foram do confortimetro -> radios_registrados[4]
+                                        if (i == 4)
+                                        {
+                                            //delta_T = Tquente - Tfrio (Tar)
+                                            delta_T = valor_calibrado[i, 2] - valor_calibrado[i, 0];
+
+                                            if (delta_T <= min_delta) delta_T = min_delta;
+                                            if (delta_T >= max_delta) delta_T = max_delta;
+
+                                            //DT = Math.Exp(2.0);
+                                            DT = Math.Exp(1 / delta_T);
+
+                                            valor_anemometro = cte_an_a * DT * DT * DT * DT
+                                                                 + cte_an_b * DT * DT * DT
+                                                                 + cte_an_c * DT * DT
+                                                                 + cte_an_d * DT
+                                                                 + cte_an_e;
+
+                                            valor_anemometro = Math.Round(valor_anemometro, 3);
+                                            media_anemometro = media_anemometro + valor_anemometro;
+
+                                            Console.WriteLine("");
+                                            Console.WriteLine("IO_SAMPLE: valor_anemometro:");
+                                            Console.WriteLine(valor_anemometro);
+
+                                            this.Invoke((MethodInvoker)delegate
+                                            {
+                                                //preencher as coisas
+                                                //adc_value[i, j].Text = adc_volt[i, j].ToString();
+                                                adc_value[i, 4].Text = valor_anemometro.ToString();
+
+                                            });
                                         }
                                     }
 
@@ -991,7 +1118,7 @@ namespace WindowsFormsApplication3
 
                 Inicializa_Log(caminho_gravacao);
                 timer_log_arquivo.Start();
-                
+
             }
             else
             {
@@ -1009,69 +1136,94 @@ namespace WindowsFormsApplication3
             multiplicador_local = multiplicador_local + 1;
             Console.WriteLine("multiplicador_local");
             Console.WriteLine(multiplicador_local.ToString());
-            if (multiplicador_local == multiplicador_gravacao) { 
-
-            //ulong contador_local = contador_amostras_validas/ Convert.ToUInt64(radios_registrados.Length);
-            ulong contador_local = contador_amostras_validas / Convert.ToUInt64(radios_conectados);
-            
-            contador_gravacoes = contador_gravacoes + 1;
-            ulong indice_gravacao = Convert.ToUInt64((periodo_gravacao/60000))*contador_gravacoes; //obter o tempo (indice de gravacao) em minutos
-            log_arquivo = File.AppendText(caminho_e_nome);
-           
-            if (contador_local > 0)
+            if (multiplicador_local == multiplicador_gravacao)
             {
-                for (int i = 0; i < radios_registrados.Length; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        Console.WriteLine("");
-                        Console.WriteLine("GRAVACAO_ARQUIVO: sensor [" + i.ToString() + "] - media_amostra:" + j.ToString());
-                        Console.WriteLine(media_amostras[i, j]);
 
-                        media_amostras[i, j] = media_amostras[i, j] / Convert.ToDouble(contador_local);
-                        media_amostras[i, j] =  Math.Round(media_amostras[i, j], 3);
-                        Console.WriteLine(media_amostras[i, j]);
+                //ulong contador_local = contador_amostras_validas/ Convert.ToUInt64(radios_registrados.Length);
+                ulong contador_local = contador_amostras_validas / Convert.ToUInt64(radios_conectados);
+
+                contador_gravacoes = contador_gravacoes + 1;
+                ulong indice_gravacao = Convert.ToUInt64((periodo_gravacao / 60000)) * contador_gravacoes; //obter o tempo (indice de gravacao) em minutos
+                log_arquivo = File.AppendText(caminho_e_nome);
+
+                if (contador_local > 0)
+                {
+                    for (int i = 0; i < radios_registrados.Length; i++)
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("GRAVACAO_ARQUIVO: sensor [" + i.ToString() + "] - media_amostra:" + j.ToString());
+                            Console.WriteLine(media_amostras[i, j]);
+
+                            media_amostras[i, j] = media_amostras[i, j] / Convert.ToDouble(contador_local);
+                            media_amostras[i, j] = Math.Round(media_amostras[i, j], 3);
+                            Console.WriteLine(media_amostras[i, j]);
+                        }
+                        //faz a media dos dados coletados do anemometro
+                        if (i == 4)
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("GRAVACAO_ARQUIVO: sensor [" + i.ToString() + "] - media_amostra: anemometro");
+                            Console.WriteLine(media_anemometro);
+
+                            media_anemometro = media_anemometro / Convert.ToDouble(contador_local);
+                            media_anemometro = Math.Round(media_anemometro, 3);
+                            Console.WriteLine(media_anemometro);
+                        }
                     }
-                }
                     //achar uma maneira de automatizar essa linha
                     log_arquivo.WriteLine(DateTime.Now.ToString("dd/MM/yyyy") + separador + DateTime.Now.ToString("HH:mm:ss") + separador + indice_gravacao + separador +
                         media_amostras[0, 0].ToString() + separador + media_amostras[0, 1].ToString() + separador + media_amostras[0, 2].ToString() + separador + media_amostras[0, 3].ToString() + separador +
-                        media_amostras[1, 0].ToString() + separador + media_amostras[1, 1].ToString() + separador + media_amostras[1, 2].ToString() + separador + media_amostras[1, 3].ToString() + separador + 
-                        media_amostras[2, 0].ToString() + separador + media_amostras[2, 1].ToString() + separador + media_amostras[2, 2].ToString() + separador + media_amostras[2, 3].ToString() + separador + 
-                        media_amostras[3, 0].ToString() + separador + media_amostras[3, 1].ToString() + separador + media_amostras[3, 2].ToString() + separador + media_amostras[3, 3].ToString() + separador + 
-                        media_amostras[4, 0].ToString() + separador + media_amostras[4, 1].ToString() + separador + media_amostras[4, 2].ToString() + separador + media_amostras[4, 3].ToString()); 
+                        media_amostras[1, 0].ToString() + separador + media_amostras[1, 1].ToString() + separador + media_amostras[1, 2].ToString() + separador + media_amostras[1, 3].ToString() + separador +
+                        media_amostras[2, 0].ToString() + separador + media_amostras[2, 1].ToString() + separador + media_amostras[2, 2].ToString() + separador + media_amostras[2, 3].ToString() + separador +
+                        media_amostras[3, 0].ToString() + separador + media_amostras[3, 1].ToString() + separador + media_amostras[3, 2].ToString() + separador + media_amostras[3, 3].ToString() + separador +
+                        //media_amostras[4, 0].ToString() + separador + media_amostras[4, 1].ToString() + separador + media_amostras[4, 2].ToString() + separador + media_amostras[4, 3].ToString());
+                        media_amostras[4, 0].ToString() + separador + media_amostras[4, 1].ToString() + separador + media_anemometro.ToString() + separador + media_amostras[4, 3].ToString());
 
                     contador_amostras_validas = 0;
 
-                for (int i = 0; i < radios_registrados.Length; i++)
-                {
-                    for (int j = 0; j < 4; j++)
+                    for (int i = 0; i < radios_registrados.Length; i++)
                     {
-                        //limpa as medias
-                        media_amostras[i, j] = 0;
+                        for (int j = 0; j < 4; j++)
+                        {
+                            //limpa as medias
+                            media_amostras[i, j] = 0;
+                        }
+                        if (i == 4) media_anemometro = 0;
                     }
-                }
-
-            }
-            else {
-                for (int i = 0; i < radios_registrados.Length; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        media_amostras[i, j] = 0;
-                        Console.WriteLine("");
-                        Console.WriteLine("GRAVACAO_ARQUIVO_ZERO: sensor [" + i.ToString() + "] - media_amostra:" + j.ToString());
-                        Console.WriteLine(media_amostras[i, j]);
-                    }
-                    log_arquivo.WriteLine(indice_gravacao + separador + media_amostras[i, 0].ToString() + separador + media_amostras[i, 1].ToString() + separador + media_amostras[i, 2].ToString() + separador + media_amostras[i, 3].ToString()); // escreve uma linha e pula
 
                 }
-                contador_amostras_validas = 0;
+                else
+                {
+
+                    for (int i = 0; i < radios_registrados.Length; i++)
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            media_amostras[i, j] = 0;
+                            Console.WriteLine("");
+                            Console.WriteLine("GRAVACAO_ARQUIVO_ZERO: sensor [" + i.ToString() + "] - media_amostra:" + j.ToString());
+                            Console.WriteLine(media_amostras[i, j]);
+                        }
+                        if (i == 4)
+                        {
+                            media_anemometro = 0;
+                            log_arquivo.WriteLine(DateTime.Now.ToString("dd/MM/yyyy") + separador + DateTime.Now.ToString("HH:mm:ss") + separador + indice_gravacao + separador +
+                            media_amostras[i, 0].ToString() + separador + media_amostras[i, 1].ToString() + separador + media_anemometro.ToString() + separador + media_amostras[i, 3].ToString());
+                        }
+                        else
+                        {
+                            log_arquivo.WriteLine(DateTime.Now.ToString("dd/MM/yyyy") + separador + DateTime.Now.ToString("HH:mm:ss") + separador + indice_gravacao + separador +
+                            media_amostras[i, 0].ToString() + separador + media_amostras[i, 1].ToString() + separador + media_amostras[i, 2].ToString() + separador + media_amostras[i, 3].ToString()); // escreve uma linha e pula
+                        }
+                    }
+                    contador_amostras_validas = 0;
+                }
+
+                log_arquivo.Close(); // tem que fechar senão dá erro qdo tentar escrever de novo
+                multiplicador_local = 0;
             }
-            
-            log_arquivo.Close(); // tem que fechar senão dá erro qdo tentar escrever de novo
-            multiplicador_local = 0;
-        }
         }
 
 
@@ -1111,11 +1263,12 @@ namespace WindowsFormsApplication3
 
         private void Form1_FormClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (flag_thread_busca == 1) { 
-            if (thr_busca.ThreadState.Equals(ThreadState.Running))
+            if (flag_thread_busca == 1)
             {
-                try { thr_busca.Abort(); } finally { serialMestre.Close(); }
-            }
+                if (thr_busca.ThreadState.Equals(ThreadState.Running))
+                {
+                    try { thr_busca.Abort(); } finally { serialMestre.Close(); }
+                }
             }
 
             if (flag_thread_aquisicao == 1)
@@ -1154,8 +1307,9 @@ namespace WindowsFormsApplication3
             {
                 btn_avancar.Text = "Avançar [" + delay_avancar.ToString() + "]";
             });
-            
-            if (delay_avancar == 0) {
+
+            if (delay_avancar == 0)
+            {
                 btn_avancar.Text = "Avançar";
                 this.Invoke((MethodInvoker)delegate
                 {

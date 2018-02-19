@@ -1139,7 +1139,8 @@ namespace WindowsFormsApplication3
             if (multiplicador_local == multiplicador_gravacao)
             {
 
-                //ulong contador_local = contador_amostras_validas/ Convert.ToUInt64(radios_registrados.Length);
+                //TODO: tem que atuar aqui para identificar quantos radios estao recebendo dados e usar como denominador, ao inves de pegar apenas os radios conectados
+                //o erro é que se caso os 4 radios (mao, pe) estejam foram e o confortimetro apenas esteja amostrando, ele vai dividir por todos os radios conectados igual
                 ulong contador_local = contador_amostras_validas / Convert.ToUInt64(radios_conectados);
 
                 contador_gravacoes = contador_gravacoes + 1;

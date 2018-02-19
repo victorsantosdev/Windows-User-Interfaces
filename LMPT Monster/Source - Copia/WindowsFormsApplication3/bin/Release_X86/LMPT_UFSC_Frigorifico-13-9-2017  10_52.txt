@@ -1,0 +1,2 @@
+Data (dd/mm/aaaa); Tempo (HH:mm:ss); Indice; Mao1_T1 (°C);Mao1_T2 (°C);Mao1_T3 (°C);Mao1_T4 (°C);Pe1_T1 (°C);Pe1_T2 (°C);Pe1_Umidade (%); Pe1_Vazio;Mao2_T1 (°C);Mao2_T2 (°C);Mao2_T3 (°C);Mao2_T4 (°C);Pe2_T1 (°C);Pe2_T2 (°C);Pe2_Umidade (%); Pe2_Vazio; Conf_Tar(°C); Conf_TGlobo (°C); Conf_Veloc.Ar (m/s); Conf_UR (%)
+13/09/2017;10:57:40;1;24.197;24.05;24.359;24.318;23.857;23.776;1.647;0.001;23.888;23.792;23.404;24.05;23.96;24.042;1.648;0;24.079;23.506;2.562;54.269

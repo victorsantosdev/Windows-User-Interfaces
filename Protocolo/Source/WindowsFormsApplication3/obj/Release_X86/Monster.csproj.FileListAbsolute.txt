@@ -1,0 +1,12 @@
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\Monster.resx
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\Monster.cs
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\Monster.Designer.cs
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\LMPT - MONSTER.exe.config
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\LMPT - MONSTER.exe
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\LMPT - MONSTER.pdb
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\WindowsFormsApplication3.TelaBusca.resources
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Monster.Properties.Resources.resources
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Monster.csproj.GenerateResource.Cache
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\LMPT - MONSTER.exe
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\LMPT - MONSTER.pdb
+C:\Users\win10\Documents\Visual Studio Projects\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Monster.csprojResolveAssemblyReference.cache

@@ -1,0 +1,13 @@
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\Protocolo.resx
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\Protocolo.cs
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\Protocolo.Designer.cs
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\LMPT - Protocolo.exe.config
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\LMPT - Protocolo.exe
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\bin\Release_X86\LMPT - Protocolo.pdb
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Protocolo.csprojAssemblyReference.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Protocolo.Properties.Resources.resources
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Protocolo.csproj.GenerateResource.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\Protocolo.csproj.CoreCompileInputs.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\LMPT - Protocolo.exe
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\LMPT - Protocolo.pdb
+C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Release_X86\WindowsFormsApplication3.Searching_Step.resources

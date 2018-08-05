@@ -11,3 +11,16 @@ C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFor
 C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Debug\Protocolo.csproj.CoreCompileInputs.cache
 C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Debug\LMPT - Protocolo.exe
 C:\Users\Victor\Documents\Windows-User-Interfaces\LMPT Monster\Source\WindowsFormsApplication3\obj\Debug\LMPT - Protocolo.pdb
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\Protocolo.resx
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\Protocolo.cs
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\Protocolo.Designer.cs
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\LMPT - Protocolo.exe.config
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\LMPT - Protocolo.exe
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\LMPT - Protocolo.pdb
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\Protocolo.csprojAssemblyReference.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.Searching_Step.resources
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\Protocolo.Properties.Resources.resources
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\Protocolo.csproj.GenerateResource.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\Protocolo.csproj.CoreCompileInputs.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT - Protocolo.exe
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT - Protocolo.pdb

@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication3
+﻿namespace LMPT_Protocolo
 {
     partial class Searching_Step
     {
@@ -29,20 +29,21 @@
         private void InitializeComponent()
         {
             this.LBL_Title = new System.Windows.Forms.Label();
-            this.TB_SA1 = new System.Windows.Forms.TextBox();
+            this.TB_SA1_Search = new System.Windows.Forms.TextBox();
             this.LBL_COM = new System.Windows.Forms.Label();
             this.CB_COM_List = new System.Windows.Forms.ComboBox();
             this.BTN_COM_Open = new System.Windows.Forms.Button();
-            this.BTN_Next = new System.Windows.Forms.Button();
-            this.LBL_SA1 = new System.Windows.Forms.Label();
-            this.LBL_SA2 = new System.Windows.Forms.Label();
-            this.TB_SA2 = new System.Windows.Forms.TextBox();
+            this.BTN_Search2Sampling = new System.Windows.Forms.Button();
+            this.LBL_SA1_Search = new System.Windows.Forms.Label();
+            this.LBL_SA2_Search = new System.Windows.Forms.Label();
+            this.TB_SA2_Search = new System.Windows.Forms.TextBox();
             this.LBL_Header = new System.Windows.Forms.Label();
             this.PB_UFSC_Icon = new System.Windows.Forms.PictureBox();
             this.PB_LMPT_Icon = new System.Windows.Forms.PictureBox();
             this.BTN_COM_Close = new System.Windows.Forms.Button();
-            this.BTN_Quit = new System.Windows.Forms.Button();
+            this.BTN_Quit_Search = new System.Windows.Forms.Button();
             this.LBL_Searching = new System.Windows.Forms.Label();
+            this.LBL_FormDescription_Search = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PB_UFSC_Icon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PB_LMPT_Icon)).BeginInit();
             this.SuspendLayout();
@@ -51,27 +52,28 @@
             // 
             this.LBL_Title.AutoSize = true;
             this.LBL_Title.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LBL_Title.Location = new System.Drawing.Point(183, 139);
+            this.LBL_Title.Location = new System.Drawing.Point(196, 139);
             this.LBL_Title.Name = "LBL_Title";
-            this.LBL_Title.Size = new System.Drawing.Size(399, 24);
+            this.LBL_Title.Size = new System.Drawing.Size(364, 24);
             this.LBL_Title.TabIndex = 0;
-            this.LBL_Title.Text = "LMPT - Protocol Communication Example";
+            this.LBL_Title.Text = "LMPT Radio Protocol Communication ";
             // 
-            // TB_SA1
+            // TB_SA1_Search
             // 
-            this.TB_SA1.Location = new System.Drawing.Point(148, 434);
-            this.TB_SA1.Name = "TB_SA1";
-            this.TB_SA1.ReadOnly = true;
-            this.TB_SA1.Size = new System.Drawing.Size(145, 20);
-            this.TB_SA1.TabIndex = 1;
-            this.TB_SA1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TB_SA1_Search.Location = new System.Drawing.Point(148, 434);
+            this.TB_SA1_Search.Name = "TB_SA1_Search";
+            this.TB_SA1_Search.ReadOnly = true;
+            this.TB_SA1_Search.Size = new System.Drawing.Size(145, 20);
+            this.TB_SA1_Search.TabIndex = 1;
+            this.TB_SA1_Search.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LBL_COM
             // 
             this.LBL_COM.AutoSize = true;
-            this.LBL_COM.Location = new System.Drawing.Point(28, 221);
+            this.LBL_COM.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.LBL_COM.Location = new System.Drawing.Point(28, 217);
             this.LBL_COM.Name = "LBL_COM";
-            this.LBL_COM.Size = new System.Drawing.Size(89, 13);
+            this.LBL_COM.Size = new System.Drawing.Size(116, 17);
             this.LBL_COM.TabIndex = 2;
             this.LBL_COM.Text = "Select COM Port:";
             // 
@@ -93,45 +95,45 @@
             this.BTN_COM_Open.UseVisualStyleBackColor = true;
             this.BTN_COM_Open.Click += new System.EventHandler(this.BTN_COM_Open_Click);
             // 
-            // BTN_Next
+            // BTN_Search2Sampling
             // 
-            this.BTN_Next.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_Next.Location = new System.Drawing.Point(241, 592);
-            this.BTN_Next.Name = "BTN_Next";
-            this.BTN_Next.Size = new System.Drawing.Size(91, 40);
-            this.BTN_Next.TabIndex = 5;
-            this.BTN_Next.Text = "Next";
-            this.BTN_Next.UseVisualStyleBackColor = true;
-            this.BTN_Next.Click += new System.EventHandler(this.BTN_Next_Click);
+            this.BTN_Search2Sampling.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTN_Search2Sampling.Location = new System.Drawing.Point(241, 592);
+            this.BTN_Search2Sampling.Name = "BTN_Search2Sampling";
+            this.BTN_Search2Sampling.Size = new System.Drawing.Size(91, 40);
+            this.BTN_Search2Sampling.TabIndex = 5;
+            this.BTN_Search2Sampling.Text = "Next";
+            this.BTN_Search2Sampling.UseVisualStyleBackColor = true;
+            this.BTN_Search2Sampling.Click += new System.EventHandler(this.BTN_Search2Sampling_Click);
             // 
-            // LBL_SA1
+            // LBL_SA1_Search
             // 
-            this.LBL_SA1.AutoSize = true;
-            this.LBL_SA1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LBL_SA1.Location = new System.Drawing.Point(28, 437);
-            this.LBL_SA1.Name = "LBL_SA1";
-            this.LBL_SA1.Size = new System.Drawing.Size(119, 17);
-            this.LBL_SA1.TabIndex = 6;
-            this.LBL_SA1.Text = "Slave_1 Address:";
+            this.LBL_SA1_Search.AutoSize = true;
+            this.LBL_SA1_Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LBL_SA1_Search.Location = new System.Drawing.Point(28, 437);
+            this.LBL_SA1_Search.Name = "LBL_SA1_Search";
+            this.LBL_SA1_Search.Size = new System.Drawing.Size(119, 17);
+            this.LBL_SA1_Search.TabIndex = 6;
+            this.LBL_SA1_Search.Text = "Slave_1 Address:";
             // 
-            // LBL_SA2
+            // LBL_SA2_Search
             // 
-            this.LBL_SA2.AutoSize = true;
-            this.LBL_SA2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LBL_SA2.Location = new System.Drawing.Point(28, 471);
-            this.LBL_SA2.Name = "LBL_SA2";
-            this.LBL_SA2.Size = new System.Drawing.Size(119, 17);
-            this.LBL_SA2.TabIndex = 7;
-            this.LBL_SA2.Text = "Slave_2 Address:";
+            this.LBL_SA2_Search.AutoSize = true;
+            this.LBL_SA2_Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LBL_SA2_Search.Location = new System.Drawing.Point(28, 471);
+            this.LBL_SA2_Search.Name = "LBL_SA2_Search";
+            this.LBL_SA2_Search.Size = new System.Drawing.Size(119, 17);
+            this.LBL_SA2_Search.TabIndex = 7;
+            this.LBL_SA2_Search.Text = "Slave_2 Address:";
             // 
-            // TB_SA2
+            // TB_SA2_Search
             // 
-            this.TB_SA2.Location = new System.Drawing.Point(148, 468);
-            this.TB_SA2.Name = "TB_SA2";
-            this.TB_SA2.ReadOnly = true;
-            this.TB_SA2.Size = new System.Drawing.Size(145, 20);
-            this.TB_SA2.TabIndex = 8;
-            this.TB_SA2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TB_SA2_Search.Location = new System.Drawing.Point(148, 468);
+            this.TB_SA2_Search.Name = "TB_SA2_Search";
+            this.TB_SA2_Search.ReadOnly = true;
+            this.TB_SA2_Search.Size = new System.Drawing.Size(145, 20);
+            this.TB_SA2_Search.TabIndex = 8;
+            this.TB_SA2_Search.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LBL_Header
             // 
@@ -170,16 +172,16 @@
             this.BTN_COM_Close.Text = "Close";
             this.BTN_COM_Close.UseVisualStyleBackColor = true;
             // 
-            // BTN_Quit
+            // BTN_Quit_Search
             // 
-            this.BTN_Quit.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.BTN_Quit.Location = new System.Drawing.Point(594, 593);
-            this.BTN_Quit.Name = "BTN_Quit";
-            this.BTN_Quit.Size = new System.Drawing.Size(82, 39);
-            this.BTN_Quit.TabIndex = 13;
-            this.BTN_Quit.Text = "Quit";
-            this.BTN_Quit.UseVisualStyleBackColor = true;
-            this.BTN_Quit.Click += new System.EventHandler(this.BTN_Quit_Click);
+            this.BTN_Quit_Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.BTN_Quit_Search.Location = new System.Drawing.Point(594, 593);
+            this.BTN_Quit_Search.Name = "BTN_Quit_Search";
+            this.BTN_Quit_Search.Size = new System.Drawing.Size(82, 39);
+            this.BTN_Quit_Search.TabIndex = 13;
+            this.BTN_Quit_Search.Text = "Quit";
+            this.BTN_Quit_Search.UseVisualStyleBackColor = true;
+            this.BTN_Quit_Search.Click += new System.EventHandler(this.BTN_Quit_Search_Click);
             // 
             // LBL_Searching
             // 
@@ -191,26 +193,37 @@
             this.LBL_Searching.TabIndex = 14;
             this.LBL_Searching.Text = "Searching for online modules...";
             // 
+            // LBL_FormDescription_Search
+            // 
+            this.LBL_FormDescription_Search.AutoSize = true;
+            this.LBL_FormDescription_Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LBL_FormDescription_Search.Location = new System.Drawing.Point(288, 163);
+            this.LBL_FormDescription_Search.Name = "LBL_FormDescription_Search";
+            this.LBL_FormDescription_Search.Size = new System.Drawing.Size(178, 24);
+            this.LBL_FormDescription_Search.TabIndex = 15;
+            this.LBL_FormDescription_Search.Text = "RF Modules Search";
+            // 
             // Searching_Step
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(688, 644);
+            this.Controls.Add(this.LBL_FormDescription_Search);
             this.Controls.Add(this.LBL_Searching);
-            this.Controls.Add(this.BTN_Quit);
+            this.Controls.Add(this.BTN_Quit_Search);
             this.Controls.Add(this.BTN_COM_Close);
             this.Controls.Add(this.PB_UFSC_Icon);
             this.Controls.Add(this.PB_LMPT_Icon);
             this.Controls.Add(this.LBL_Header);
-            this.Controls.Add(this.TB_SA2);
-            this.Controls.Add(this.LBL_SA2);
-            this.Controls.Add(this.LBL_SA1);
-            this.Controls.Add(this.BTN_Next);
+            this.Controls.Add(this.TB_SA2_Search);
+            this.Controls.Add(this.LBL_SA2_Search);
+            this.Controls.Add(this.LBL_SA1_Search);
+            this.Controls.Add(this.BTN_Search2Sampling);
             this.Controls.Add(this.BTN_COM_Open);
             this.Controls.Add(this.CB_COM_List);
             this.Controls.Add(this.LBL_COM);
-            this.Controls.Add(this.TB_SA1);
+            this.Controls.Add(this.TB_SA1_Search);
             this.Controls.Add(this.LBL_Title);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Searching_Step";
@@ -227,20 +240,21 @@
         private System.Windows.Forms.Label serError_lbl;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label LBL_Title;
-        private System.Windows.Forms.TextBox TB_SA1;
+        private System.Windows.Forms.TextBox TB_SA1_Search;
         private System.Windows.Forms.Label LBL_COM;
         private System.Windows.Forms.ComboBox CB_COM_List;
         private System.Windows.Forms.Button BTN_COM_Open;
-        private System.Windows.Forms.Button BTN_Next;
-        private System.Windows.Forms.Label LBL_SA1;
-        private System.Windows.Forms.Label LBL_SA2;
-        private System.Windows.Forms.TextBox TB_SA2;
+        private System.Windows.Forms.Button BTN_Search2Sampling;
+        private System.Windows.Forms.Label LBL_SA1_Search;
+        private System.Windows.Forms.Label LBL_SA2_Search;
+        private System.Windows.Forms.TextBox TB_SA2_Search;
         private System.Windows.Forms.Label LBL_Header;
         private System.Windows.Forms.PictureBox PB_LMPT_Icon;
         private System.Windows.Forms.PictureBox PB_UFSC_Icon;
         private System.Windows.Forms.Button BTN_COM_Close;
-        private System.Windows.Forms.Button BTN_Quit;
+        private System.Windows.Forms.Button BTN_Quit_Search;
         private System.Windows.Forms.Label LBL_Searching;
+        private System.Windows.Forms.Label LBL_FormDescription_Search;
     }
 }
 

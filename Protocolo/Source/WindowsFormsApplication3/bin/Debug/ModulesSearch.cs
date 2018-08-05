@@ -9,17 +9,19 @@ using System.Text;
 using System.Drawing;
 using System.Timers;
 
-namespace WindowsFormsApplication3
+namespace LMPT_Protocolo
 {
 
 
     public partial class Searching_Step : Form
     {
-        byte[] KNOCK = { 0xAF, 0x00, 0x00, 0x00, 0x01, 0x0A, 0x0B, 0x0C, 0x0D, 0xAE };
+        byte[] KNOCK = { 0xAF, 0xB2, 0x01, 0x01, 0x0C, 0x01, 0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x10 };
         string[] registered_slave_modules = new string[] { "0x02", "0x03"}; //Endereços dos Arduinos registrados na rede
         public int connected_slave_modules = 0; //numero de radios CONECTADOS, posso ter varios radios REGISTRADOS mas só alguns conectados
+        const int MAX_PROTOCOL_LENGTH = 12;
 
-        int g_delay_next_btn = 3;
+        public int g_delay_next_btn = 3; //3k ms = 3s
+
         public bool g_toogle_search = false;
         Thread thr_searching;
 
@@ -31,7 +33,7 @@ namespace WindowsFormsApplication3
         int g_searching_flag = 0;
         public bool g_stop_discovery_flag = false;
         Int32 g_searching_time = 30000; //30s
-
+        public bool searching_modules_flag = false;
 
         public Searching_Step()
         {
@@ -41,10 +43,14 @@ namespace WindowsFormsApplication3
             //this.MinimumSize = new Size(800, 800);
             //this.MaximumSize = new Size(800, 800);
 
-            TB_SA1.Text = registered_slave_modules[0];
-            TB_SA2.Text = registered_slave_modules[1];
+            TB_SA1_Search.Text = registered_slave_modules[0];
+            TB_SA2_Search.Text = registered_slave_modules[1];
             LBL_Searching.Visible = false;
-
+            LBL_Header.Visible = false;
+            LBL_SA1_Search.Visible = false;
+            LBL_SA2_Search.Visible = false;
+            TB_SA1_Search.Visible = false;
+            TB_SA2_Search.Visible = false;
             // 
             // timer_blink_searching_label
             // 
@@ -66,7 +72,7 @@ namespace WindowsFormsApplication3
             timer_to_enable_next.Tick += new EventHandler(timer_to_enable_next_Tick);
 
             BTN_COM_Close.Enabled = false;
-            BTN_Next.Enabled = false;
+            BTN_Search2Sampling.Enabled = false;
             timer_blink_searching_label.Enabled = false;
             update_com_ports();
             CultureInfo culture;
@@ -136,7 +142,7 @@ namespace WindowsFormsApplication3
                             protocol_rx_buffer.Append(arduino_uart_tx);
                             protocol_rx_token = protocol_rx_token + 1;
 
-                            if (protocol_rx_token == 10) //tamanho do pacote do protocolo
+                            if (protocol_rx_token == MAX_PROTOCOL_LENGTH) //tamanho do pacote do protocolo
                             {
                                 //debug em console
                                 Console.WriteLine("Protocolo: HEX STRING: ");
@@ -164,8 +170,8 @@ namespace WindowsFormsApplication3
 
                                     Console.WriteLine("Protocolo: Pacote Integro");
                                     valid_packages.Add(protocol_rx_buffer.ToString());
-                                    found_module_addr.Add("0x"+protocol_rx_buffer.ToString().Substring(16, 2)); //oitavo byte eh o ID do modulo detectado
-                                    Console.WriteLine(""+ protocol_rx_buffer.ToString().Substring(16, 2));
+                                    found_module_addr.Add("0x"+protocol_rx_buffer.ToString().Substring(20, 2)); //oitavo byte eh o ID do modulo detectado
+                                    Console.WriteLine(""+ protocol_rx_buffer.ToString().Substring(20, 2));
                                     Console.WriteLine("IO Data: Modulo Arduino Adicionado:");
                                     Console.WriteLine(found_module_addr[found_module_addr.Count - 1]);
 
@@ -177,7 +183,7 @@ namespace WindowsFormsApplication3
                                 protocol_rx_buffer.Clear();
 
                                 //itera o vetor de radios registrados para ver se o SL atual encontra-se neste vetor
-                                //melhorar essa busca
+                                //melhorar esse algoritmo, ver uma associação melhor entre as labels e os vetores
                                 for (int i = 0; i < (temp_registered_modules.Count); i++)
                                 {
                                     for (int j = 0; j < (found_module_addr.Count); j++)
@@ -195,13 +201,13 @@ namespace WindowsFormsApplication3
                                                 case 0:
                                                     this.Invoke((MethodInvoker)delegate
                                                     {
-                                                        TB_SA1.BackColor = Color.Green;
+                                                        TB_SA1_Search.BackColor = Color.Green;
                                                     });
                                                     break;
                                                 case 1:
                                                     this.Invoke((MethodInvoker)delegate
                                                     {
-                                                        TB_SA2.BackColor = Color.Green;
+                                                        TB_SA2_Search.BackColor = Color.Green;
                                                     });
                                                     break;
 
@@ -212,6 +218,7 @@ namespace WindowsFormsApplication3
                                             temp_registered_modules.RemoveAt(i);
                                             num_modules = num_modules - 1;
                                             connected_slave_modules = connected_slave_modules + 1;
+                                            if (num_modules == 0) break;
                                         }
                                     }
                                 }
@@ -220,7 +227,7 @@ namespace WindowsFormsApplication3
 
                             }
                         }
-                        //7E byte de inicio do frame API do radio
+                        //AF byte de inicio do frame API do radio
                         if (String.Equals(arduino_uart_tx, "AF"))
                         {
                             protocol_rx_token = 1;
@@ -245,9 +252,9 @@ namespace WindowsFormsApplication3
                     timer_blink_searching_label.Stop();
                     timer_stop_searching.Stop();
                     LBL_Searching.Visible = true;
-                    LBL_Searching.Text = "Modules Found";           
+                    LBL_Searching.Text = "Modules Found";
                     timer_to_enable_next.Start(); // runs on UI thread              
-            });
+                });
 
             }
         }
@@ -280,36 +287,38 @@ namespace WindowsFormsApplication3
             }
             this.Invoke((MethodInvoker)delegate
             {
-                BTN_Next.Text = "Next [" + g_delay_next_btn.ToString() + "]";
+                BTN_Search2Sampling.Text = "Next [" + g_delay_next_btn.ToString() + "]";
             });
 
             if (g_delay_next_btn == 0)
             {
-                BTN_Next.Text = "Next";
+                BTN_Search2Sampling.Text = "Next";
                 this.Invoke((MethodInvoker)delegate
                 {
                     timer_to_enable_next.Stop(); // runs on UI thread
-                    BTN_Next.Enabled = true;
+                    BTN_Search2Sampling.Enabled = true;
                 });
             }
         }
 
         private void timer_blink_searching_label_Tick(Object myObject, EventArgs myEventArgs)
         {
-            g_toogle_search = !g_toogle_search;
+            searching_modules_flag = !searching_modules_flag;
 
             this.Invoke((MethodInvoker)delegate
             {
-                LBL_Searching.Visible = g_toogle_search;
+                LBL_Searching.Visible = searching_modules_flag;
             });
 
         }
 
-        private void BTN_Next_Click(object sender, EventArgs e)
+        private void BTN_Search2Sampling_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Form FORM_Aquis = new Form();
-            FORM_Aquis.Show();
+            DataSampling form2 = new DataSampling();
+            form2.Show();
+            //Form FORM_Aquis = new Form();
+            //FORM_Aquis.Show();
 
             if (pc_com_port.IsOpen == true)
             {
@@ -324,15 +333,13 @@ namespace WindowsFormsApplication3
             finally
             {
 
-                //thr_aquisicao = new Thread(() => rx_analogSamples(pc_com_port, registered_slave_modules.Length));
-                //thr_aquisicao.Start();
-                BTN_Next.Enabled = false;
-                BTN_Next.Visible = false;
+                BTN_Search2Sampling.Enabled = false;
+                BTN_Search2Sampling.Visible = false;
 
             }
         }
 
-        private void BTN_Quit_Click(object sender, EventArgs e)
+        private void BTN_Quit_Search_Click(object sender, EventArgs e)
         {
             if (g_searching_flag == 1)
             {
@@ -366,6 +373,12 @@ namespace WindowsFormsApplication3
 
                     pc_com_port.Close();
                     BTN_COM_Close.Enabled = true;
+                    LBL_Searching.Visible = true;
+                    LBL_Header.Visible = true;
+                    LBL_SA1_Search.Visible = true;
+                    LBL_SA2_Search.Visible = true;
+                    TB_SA1_Search.Visible = true;
+                    TB_SA2_Search.Visible = true;
                     thr_searching = new Thread(() => search_for_modules(pc_com_port, registered_slave_modules.Length));
                     thr_searching.Start();
 
@@ -381,6 +394,8 @@ namespace WindowsFormsApplication3
                 update_com_ports();
             }
         }
+
+
     }
 }
 

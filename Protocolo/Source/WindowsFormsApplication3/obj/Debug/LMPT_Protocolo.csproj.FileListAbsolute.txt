@@ -5,10 +5,10 @@ C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsA
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\LMPT - Protocolo.exe
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\bin\Debug\LMPT - Protocolo.pdb
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.DataSampling.resources
-C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.Searching_Step.resources
-C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\Protocolo.Properties.Resources.resources
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.csproj.GenerateResource.cache
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.csproj.CoreCompileInputs.cache
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT - Protocolo.exe
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT - Protocolo.pdb
 C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.csprojAssemblyReference.cache
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.ModulesSearch.resources
+C:\Users\Victor\Documents\Windows-User-Interfaces\Protocolo\Source\WindowsFormsApplication3\obj\Debug\LMPT_Protocolo.Properties.Resources.resources

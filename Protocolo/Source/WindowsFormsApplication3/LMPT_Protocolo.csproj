@@ -7,7 +7,7 @@
     <ProjectGuid>{B2E99FEA-7415-45DF-8FF0-CCAC064F665E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Protocolo</RootNamespace>
+    <RootNamespace>LMPT_Protocolo</RootNamespace>
     <AssemblyName>LMPT - Protocolo</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -91,6 +91,7 @@
     <Compile Include="DataSampling.Designer.cs">
       <DependentUpon>DataSampling.cs</DependentUpon>
     </Compile>
+    <Compile Include="LMPT_SerialProtocol.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -106,6 +107,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XbeeNetwork.cs" />
     <EmbeddedResource Include="DataSampling.resx">
       <DependentUpon>DataSampling.cs</DependentUpon>
     </EmbeddedResource>

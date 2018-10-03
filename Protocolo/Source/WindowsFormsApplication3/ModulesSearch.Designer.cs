@@ -1,6 +1,6 @@
 ﻿namespace LMPT_Protocolo
 {
-    partial class Searching_Step
+    partial class ModulesSearch
     {
         /// <summary>
         /// Required designer variable.
@@ -147,7 +147,7 @@
             // 
             // PB_UFSC_Icon
             // 
-            this.PB_UFSC_Icon.Image = global::Protocolo.Properties.Resources.ufsc_brasao;
+            this.PB_UFSC_Icon.Image = global::LMPT_Protocolo.Properties.Resources.ufsc_brasao;
             this.PB_UFSC_Icon.Location = new System.Drawing.Point(367, 12);
             this.PB_UFSC_Icon.Name = "PB_UFSC_Icon";
             this.PB_UFSC_Icon.Size = new System.Drawing.Size(180, 124);
@@ -156,7 +156,7 @@
             // 
             // PB_LMPT_Icon
             // 
-            this.PB_LMPT_Icon.Image = global::Protocolo.Properties.Resources.lpmt_resized;
+            this.PB_LMPT_Icon.Image = global::LMPT_Protocolo.Properties.Resources.lpmt_resized;
             this.PB_LMPT_Icon.Location = new System.Drawing.Point(215, 12);
             this.PB_LMPT_Icon.Name = "PB_LMPT_Icon";
             this.PB_LMPT_Icon.Size = new System.Drawing.Size(146, 124);
@@ -227,7 +227,7 @@
             this.Controls.Add(this.LBL_Title);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Searching_Step";
-            this.Text = "LMPT Protocolo";
+            this.Text = "LMPT LMPT_Protocolo";
             ((System.ComponentModel.ISupportInitialize)(this.PB_UFSC_Icon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PB_LMPT_Icon)).EndInit();
             this.ResumeLayout(false);

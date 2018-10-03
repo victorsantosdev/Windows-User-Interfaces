@@ -16,7 +16,7 @@ namespace LMPT_Protocolo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Searching_Step());
+            Application.Run(new ModulesSearch());
         }
     }
 }

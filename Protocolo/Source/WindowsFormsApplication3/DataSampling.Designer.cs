@@ -69,7 +69,7 @@
             // 
             // PB_UFSC_Icon
             // 
-            this.PB_UFSC_Icon.Image = global::Protocolo.Properties.Resources.ufsc_brasao;
+            this.PB_UFSC_Icon.Image = global::LMPT_Protocolo.Properties.Resources.ufsc_brasao;
             this.PB_UFSC_Icon.Location = new System.Drawing.Point(389, 12);
             this.PB_UFSC_Icon.Name = "PB_UFSC_Icon";
             this.PB_UFSC_Icon.Size = new System.Drawing.Size(180, 124);
@@ -78,7 +78,7 @@
             // 
             // PB_LMPT_Icon
             // 
-            this.PB_LMPT_Icon.Image = global::Protocolo.Properties.Resources.lpmt_resized;
+            this.PB_LMPT_Icon.Image = global::LMPT_Protocolo.Properties.Resources.lpmt_resized;
             this.PB_LMPT_Icon.Location = new System.Drawing.Point(237, 12);
             this.PB_LMPT_Icon.Name = "PB_LMPT_Icon";
             this.PB_LMPT_Icon.Size = new System.Drawing.Size(146, 124);

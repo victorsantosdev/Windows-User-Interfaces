@@ -7,14 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+
 namespace LMPT_Protocolo
 {
     public partial class DataSampling : Form
     {
+
+
         public DataSampling()
         {
             InitializeComponent();
+
         }
+
 
         private void BTN_Quit_Sampling_Click(object sender, EventArgs e)
         {

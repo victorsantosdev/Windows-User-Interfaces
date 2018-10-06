@@ -85,6 +85,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComPort.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DataSampling.cs">
       <SubType>Form</SubType>
     </Compile>

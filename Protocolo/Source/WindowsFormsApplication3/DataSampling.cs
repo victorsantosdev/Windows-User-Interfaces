@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 
@@ -12,12 +6,45 @@ namespace LMPT_Protocolo
 {
     public partial class DataSampling : Form
     {
+        ComPort samplingPort;
+        XbeeNetwork samplingNetwork;
 
-
-        public DataSampling()
+        public DataSampling(ComPort port, XbeeNetwork xbee_network)
         {
+            samplingNetwork = xbee_network;
+            samplingPort = port;
             InitializeComponent();
+            refresNodesAddress(xbee_network);
 
+
+
+        }
+
+        void refresNodesAddress(XbeeNetwork xbee_network) {
+            foreach (string s in xbee_network.getFoundNodes())
+            {
+                for (int i = 0; i < xbee_network.numberOfNodes(); i++)
+                {
+                    if (s == xbee_network.getNode(i))
+                    {
+                        switch (i)
+                        {
+                            case 0:
+
+                                TB_SA1_Sampling.Text = xbee_network.getNode(i);
+
+                                break;
+                            case 1:
+
+                                TB_SA2_Sampling.Text = xbee_network.getNode(i);
+
+                                break;
+
+                            default: break;
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -31,6 +58,8 @@ namespace LMPT_Protocolo
             //    }
             //}
 
+            samplingPort.Close();
+            samplingPort.Dispose();
             Application.Exit();
         }
     }

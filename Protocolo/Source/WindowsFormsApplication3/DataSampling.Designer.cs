@@ -35,7 +35,7 @@
             this.LBL_SLA2_Sampling = new System.Windows.Forms.Label();
             this.LBL_FormDescription_Sampling = new System.Windows.Forms.Label();
             this.TB_SA1_Sampling = new System.Windows.Forms.TextBox();
-            this.TB_SLA2_Sampling = new System.Windows.Forms.TextBox();
+            this.TB_SA2_Sampling = new System.Windows.Forms.TextBox();
             this.TB_SLA1_Sensor1 = new System.Windows.Forms.TextBox();
             this.TB_SLA1_Sensor2 = new System.Windows.Forms.TextBox();
             this.TB_SLA1_Sensor3 = new System.Windows.Forms.TextBox();
@@ -124,14 +124,14 @@
             this.TB_SA1_Sampling.TabIndex = 18;
             this.TB_SA1_Sampling.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TB_SLA2_Sampling
+            // TB_SA2_Sampling
             // 
-            this.TB_SLA2_Sampling.Location = new System.Drawing.Point(520, 252);
-            this.TB_SLA2_Sampling.Name = "TB_SLA2_Sampling";
-            this.TB_SLA2_Sampling.ReadOnly = true;
-            this.TB_SLA2_Sampling.Size = new System.Drawing.Size(145, 20);
-            this.TB_SLA2_Sampling.TabIndex = 19;
-            this.TB_SLA2_Sampling.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TB_SA2_Sampling.Location = new System.Drawing.Point(520, 252);
+            this.TB_SA2_Sampling.Name = "TB_SA2_Sampling";
+            this.TB_SA2_Sampling.ReadOnly = true;
+            this.TB_SA2_Sampling.Size = new System.Drawing.Size(145, 20);
+            this.TB_SA2_Sampling.TabIndex = 19;
+            this.TB_SA2_Sampling.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TB_SLA1_Sensor1
             // 
@@ -302,7 +302,7 @@
             this.Controls.Add(this.TB_SLA1_Sensor3);
             this.Controls.Add(this.TB_SLA1_Sensor2);
             this.Controls.Add(this.TB_SLA1_Sensor1);
-            this.Controls.Add(this.TB_SLA2_Sampling);
+            this.Controls.Add(this.TB_SA2_Sampling);
             this.Controls.Add(this.TB_SA1_Sampling);
             this.Controls.Add(this.LBL_FormDescription_Sampling);
             this.Controls.Add(this.LBL_SLA2_Sampling);
@@ -328,7 +328,7 @@
         private System.Windows.Forms.Label LBL_SLA2_Sampling;
         private System.Windows.Forms.Label LBL_FormDescription_Sampling;
         private System.Windows.Forms.TextBox TB_SA1_Sampling;
-        private System.Windows.Forms.TextBox TB_SLA2_Sampling;
+        private System.Windows.Forms.TextBox TB_SA2_Sampling;
         private System.Windows.Forms.TextBox TB_SLA1_Sensor1;
         private System.Windows.Forms.TextBox TB_SLA1_Sensor2;
         private System.Windows.Forms.TextBox TB_SLA1_Sensor3;

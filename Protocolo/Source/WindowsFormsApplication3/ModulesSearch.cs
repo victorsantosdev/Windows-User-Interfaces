@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO.Ports;
-using System.IO;
-using System.Threading;
 using System.Globalization;
-using System.Text;
-using System.Drawing;
-using System.Timers;
-using LMPT_Protocolo;
+using System.IO.Ports;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace LMPT_Protocolo
 {
@@ -18,15 +12,17 @@ namespace LMPT_Protocolo
         public int g_delay_next_btn = 3; //3k ms = 3s
         public bool g_toogle_search = false;
 
-        SerialPort pc_com_port = new SerialPort();
-       
+        ComPort pc_com_port = new ComPort(); //parameter is refresh rate for update com ports in milliseconds
+
         System.Windows.Forms.Timer timer_blink_searching;
         System.Windows.Forms.Timer timer_to_enable_next;
+        System.Windows.Forms.Timer timer_refreshComPorts;
 
 
         public bool g_blink_search_flag = false;
         LMPT_SerialProtocol lpmt_sp = new LMPT_SerialProtocol();
         XbeeNetwork xbee_network;
+        private Thread thr_waitSearchDone;
 
         public ModulesSearch()
         {
@@ -34,12 +30,6 @@ namespace LMPT_Protocolo
 
             InitializeComponent();
             this.FormClosing += ModulesSearch_Close;
-
-            //default COM port Arduino configuration
-            pc_com_port.BaudRate = 115200;
-            pc_com_port.Parity = Parity.None;
-            pc_com_port.DataBits = 8;
-            pc_com_port.StopBits = StopBits.One;
 
             //if needed to keep a fixed window size
             //this.MinimumSize = new Size(800, 800);
@@ -62,35 +52,42 @@ namespace LMPT_Protocolo
             timer_to_enable_next.Interval = 1000; //1s
             timer_to_enable_next.Tick += new EventHandler(timer_to_enable_next_Tick);
 
+            timer_refreshComPorts = new System.Windows.Forms.Timer();
+            timer_refreshComPorts.Interval = 5000; //1s
+            timer_refreshComPorts.Tick += new EventHandler(refresh_com_event);
+            timer_refreshComPorts.Start();
+
             BTN_COM_Close.Enabled = false;
             BTN_Search2Sampling.Enabled = false;
             timer_blink_searching.Enabled = false;
-            update_com_ports();
+            CB_COM_List.DataSource = pc_com_port.update_comPorts();
+
             CultureInfo culture;
             culture = CultureInfo.CreateSpecificCulture("en-US");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
         }
 
-
-        void update_com_ports()
+        private void refresh_com_event(Object myObject, EventArgs myEventArgs)
         {
-            String[] portas = SerialPort.GetPortNames();
-            CB_COM_List.Items.AddRange(portas);
-
+            this.Invoke((MethodInvoker)delegate
+            {
+                CB_COM_List.DataSource = pc_com_port.update_comPorts();
+            });
         }
-
-
 
         private void timer_blink_searching_label_Tick(Object myObject, EventArgs myEventArgs)
         {
-            g_blink_search_flag = !g_blink_search_flag;
-
-            this.Invoke((MethodInvoker)delegate
+            if (xbee_network.searching() == true)
             {
-                LBL_Searching.Visible = g_blink_search_flag;
-            });
+                g_blink_search_flag = !g_blink_search_flag;
 
+                this.Invoke((MethodInvoker)delegate
+                {
+                    LBL_Searching.Visible = g_blink_search_flag;
+                });
+            }
+            else timer_blink_searching.Enabled = false;
         }
 
         private void ModulesSearch_Close(object sender, System.ComponentModel.CancelEventArgs e)
@@ -99,6 +96,10 @@ namespace LMPT_Protocolo
             if (xbee_network.searching() == true)
             {
                 try { xbee_network.stopSearch(); } finally { pc_com_port.Close(); }
+                this.Invoke((MethodInvoker)delegate
+                {
+                    timer_blink_searching.Enabled = false;
+                });
 
             }
 
@@ -118,19 +119,23 @@ namespace LMPT_Protocolo
 
             if (g_delay_next_btn == 0)
             {
+                if (thr_waitSearchDone.IsAlive) thr_waitSearchDone.Abort();
+
                 BTN_Search2Sampling.Text = "Next";
                 this.Invoke((MethodInvoker)delegate
                 {
+
                     timer_to_enable_next.Stop(); // runs on UI thread
                     BTN_Search2Sampling.Enabled = true;
                 });
             }
         }
 
+
         private void BTN_Search2Sampling_Click(object sender, EventArgs e)
         {
             this.Hide();
-            DataSampling dataSamping_form = new DataSampling();
+            DataSampling dataSamping_form = new DataSampling(pc_com_port, xbee_network);
             dataSamping_form.Show();
 
             if (pc_com_port.IsOpen == true)
@@ -138,27 +143,19 @@ namespace LMPT_Protocolo
                 pc_com_port.Close();
             }
 
-            try
-            {
-                xbee_network.stopSearch();
-            } //mata a tread de busca quando inicia a thread de aquisicao
-            finally
-            {
-
-                BTN_Search2Sampling.Enabled = false;
-                BTN_Search2Sampling.Visible = false;
-
-            }
+            BTN_Search2Sampling.Enabled = false;
+            BTN_Search2Sampling.Visible = false;
         }
 
         private void BTN_Quit_Search_Click(object sender, EventArgs e)
         {
             if (xbee_network.searching() == true)
             {
-                try { xbee_network.stopSearch(); } finally { pc_com_port.Close(); }
+                try { xbee_network.stopSearch(); } finally { pc_com_port.Close();
+                    pc_com_port.Dispose();
+                }
 
             }
-
             Application.Exit();
         }
 
@@ -179,6 +176,7 @@ namespace LMPT_Protocolo
 
                 if (pc_com_port.IsOpen == true)
                 {
+                    timer_refreshComPorts.Stop();
                     BTN_COM_Open.Enabled = false;
                     //pc_com_port.Write(lpmt_sp.knock_cmd(), 0, lpmt_sp.maxLenght());
                     pc_com_port.Close();
@@ -191,21 +189,72 @@ namespace LMPT_Protocolo
                     TB_SA2_Search.Visible = true;
                     timer_blink_searching.Start();
                     xbee_network.startSearch(pc_com_port, xbee_network, timeToSearch);
-                    //xbee_network.foundNodes
+                    thr_waitSearchDone = new Thread(() => waitSearchDone(xbee_network));
+                    thr_waitSearchDone.Name = "waitSearchDone_thread";
+                    thr_waitSearchDone.Start();
                 }
                 else
                 {
-                    serError_lbl.Visible = true;
+                    //  serError_lbl.Visible = true;
                 }
-            }
-            else
-            {
-                CB_COM_List.Items.Clear();
-                update_com_ports();
             }
         }
 
+        private void waitSearchDone(XbeeNetwork xbee_network) {
+            int index = 0;
+            Thread.Sleep(5000);
+            while (xbee_network.searching()) { Thread.Sleep(1000); }
+            this.Invoke((MethodInvoker)delegate
+            {
+                //elements of UI thread
+                LBL_Searching.Visible = true;
+                LBL_Searching.Text = "          Modules Found"; //TODO: fix this!
+            });
 
+
+            this.Invoke((MethodInvoker)delegate
+            {
+                foreach (string s in xbee_network.getFoundNodes())
+                {
+                    for (int i = 0; i < xbee_network.numberOfNodes(); i++)
+                    {
+                        if (s == xbee_network.getNode(i)) {
+                            switch (i) {
+                                case 0:
+                                    this.Invoke((MethodInvoker)delegate
+                                    {
+                                        TB_SA1_Search.BackColor = System.Drawing.Color.Green;
+                                    });
+                                    break;
+                                case 1:
+                                    this.Invoke((MethodInvoker)delegate
+                                    {
+                                        TB_SA2_Search.BackColor = System.Drawing.Color.Green;
+                                    });
+                                    break;
+
+                                default: break;
+                            }
+                        }
+                    }
+                }
+                timer_to_enable_next.Start();
+            });
+
+
+        }
+
+        private void BTN_COM_Close_Click(object sender, EventArgs e)
+        {
+            if (xbee_network.searching() == true)
+            {
+                try { xbee_network.stopSearch(); } finally { pc_com_port.Close();
+                    pc_com_port.Dispose();
+                }
+                BTN_COM_Open.Enabled = true;
+                CB_COM_List.DataSource = pc_com_port.update_comPorts();
+            }
+        }
     }
 }
 

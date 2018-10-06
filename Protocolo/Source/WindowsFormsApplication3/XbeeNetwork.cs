@@ -10,8 +10,8 @@ namespace LMPT_Protocolo
 {
     public class XbeeNetwork
     {
-        private string[] networkNodes;
-        private List<string> foundNodes;
+        private string[] networkNodes; //network structure, passed at the class instantiation
+        private List<string> foundNodes; //list filled during the searching process
         /* Hint: System Form Timers will not works inside classes and threads */
         private System.Timers.Timer timer_send_knock = new System.Timers.Timer();
         private System.Timers.Timer timer_stop_searching = new System.Timers.Timer();
@@ -26,6 +26,13 @@ namespace LMPT_Protocolo
         public XbeeNetwork(string[] radios_address)
         {
             this.networkNodes = radios_address;
+            foundNodes = new List<string>(networkNodes.Length);
+        }
+
+
+
+        public List<string> getFoundNodes() {
+            return foundNodes;
         }
 
         public bool searching()
@@ -50,18 +57,20 @@ namespace LMPT_Protocolo
 
         public void stopSearch()
         {
-            this.thr_searching.Abort();
+            if (thr_searching.IsAlive) { this.thr_searching.Abort();  }
+            this.is_searching = false;
+            this.timer_send_knock.Enabled = false;
         }
 
-        public void startSearch(SerialPort arduino_master_com, XbeeNetwork xbeeNetwork, int searching_time)
+        public void startSearch(ComPort arduino_master_com, XbeeNetwork xbeeNetwork, int searching_time)
         { //arg in milliseconds
            
             this.timer_stop_searching.Elapsed += new ElapsedEventHandler(stop_searching_event);
             this.timer_stop_searching.Interval = searching_time;
 
             this.timer_send_knock.Interval = 1000; //1s
-
-            this.thr_searching = new Thread(() => nodes_search(arduino_master_com, xbeeNetwork.numberOfNodes()));
+            this.thr_searching = new Thread(() => nodes_search(arduino_master_com, xbeeNetwork));
+            this.thr_searching.Name = "nodeSearch_thread";
             this.thr_searching.Start();
         }
 
@@ -76,6 +85,8 @@ namespace LMPT_Protocolo
         {
             this.is_searching = false;
             this.timer_send_knock.Enabled = false;
+            this.timer_send_knock.Dispose();
+            if (thr_searching.IsAlive == true) thr_searching.Abort();
 
         }
 
@@ -88,18 +99,17 @@ namespace LMPT_Protocolo
             return bytes;
         }
 
-        private void nodes_search(SerialPort arduino_master_serial, int n_nodes)
+        private void nodes_search(ComPort arduino_master_serial, XbeeNetwork xbeeNetwork)
         {
             this.is_searching = true;
 
             StringBuilder protocol_rx_buffer = new StringBuilder();
-            List<string> found_module_addr = new List<string>();
-            List<string> valid_packages = new List<string>();
+            List<string> discovered_nodes = new List<string>();
             int protocol_rx_count = 0;
             byte[] rx_samples;
             int checksum = 0;
-            int num_modules = n_nodes;
-            List<string> temp_registered_modules = new List<string>(n_nodes);
+            int num_modules = xbeeNetwork.numberOfNodes();
+            List<string> nodes_to_find = new List<string>(xbeeNetwork.networkNodes);
 
             if (arduino_master_serial.IsOpen) arduino_master_serial.Close();
             arduino_master_serial.Open();
@@ -152,12 +162,10 @@ namespace LMPT_Protocolo
                                 {
 
                                     Console.WriteLine("Protocolo: Pacote Integro");
-                                    valid_packages.Add(protocol_rx_buffer.ToString());
-                                    found_module_addr.Add("0x" + protocol_rx_buffer.ToString().Substring(20, 2)); //oitavo byte eh o ID do modulo detectado
+                                    discovered_nodes.Add("0x" + protocol_rx_buffer.ToString().Substring(20, 2)); //oitavo byte eh o ID do modulo detectado
                                     Console.WriteLine("" + protocol_rx_buffer.ToString().Substring(20, 2));
                                     Console.WriteLine("IO Data: Modulo Arduino Adicionado:");
-                                    Console.WriteLine(found_module_addr[found_module_addr.Count - 1]);
-
+                                    Console.WriteLine(discovered_nodes[discovered_nodes.Count - 1]);
                                 }
 
                                 checksum = 0;
@@ -165,48 +173,31 @@ namespace LMPT_Protocolo
                                 //limpa a string de dados recebidos
                                 protocol_rx_buffer.Clear();
 
-                                //itera o vetor de radios registrados para ver se o SL atual encontra-se neste vetor
-                                //melhorar esse algoritmo, ver uma associação melhor entre as labels e os vetores
-                                for (int i = 0; i < (temp_registered_modules.Count); i++)
+                                for (int i = 0; i < (nodes_to_find.Count); i++)
                                 {
-                                    for (int j = 0; j < (found_module_addr.Count); j++)
+                                    for (int j = 0; j < (discovered_nodes.Count); j++)
                                     {
-                                        if (temp_registered_modules[i] == found_module_addr[j])
+                                        if (discovered_nodes[j] == nodes_to_find[i])
                                         {
                                             //debug console
-                                            Console.WriteLine("IO Data: Detectou um modulo registrado: ");
-                                            Console.WriteLine(temp_registered_modules[i]);
-                                            //var indice = Array.FindIndex(registered_slave_modules, row => row.Contains(temp_registered_modules[i]));
-                                            Console.WriteLine("IO Data: Achou: ");
+                                            Console.WriteLine("IO Data: Node found: ");
+                                            Console.WriteLine(nodes_to_find[i]);
+                                            //var indice = Array.FindIndex(registered_slave_modules, row => row.Contains(nodes_to_find[i]));
+                                            //Console.WriteLine("IO Data: Achou: ");
                                             //Console.WriteLine(registered_slave_modules[indice]);
-                                            switch (i)
-                                            {
-                                                case 0:
-                                                    //this.Invoke((MethodInvoker)delegate
-                                                    //{
-                                                    //    TB_SA1_Search.BackColor = Color.Green;
-                                                    //});
-                                                    break;
-                                                case 1:
-                                                    //this.Invoke((MethodInvoker)delegate
-                                                    //{
-                                                    //    TB_SA2_Search.BackColor = Color.Green;
-                                                    //});
-                                                    break;
-
-                                                default: break;
-                                            }
-
-                                            found_module_addr.RemoveAt(j);
-                                            temp_registered_modules.RemoveAt(i);
+                                            xbeeNetwork.foundNodes.Add(nodes_to_find[i]);
+                                            nodes_to_find.RemoveAt(i);
                                             num_modules = num_modules - 1;
                                             //connected_slave_modules = connected_slave_modules + 1;
-                                            if (num_modules == 0) break;
+                                            if (num_modules == 0) {
+                                                is_searching = false;
+                                                break;
+                                            } 
                                         }
                                     }
                                 }
 
-                                found_module_addr.Clear(); //limpa em caso de adicionar o mesmo endereço duas vezes
+                                discovered_nodes.Clear(); //limpa em caso de adicionar o mesmo endereço duas vezes
 
                             }
                         }
@@ -223,21 +214,15 @@ namespace LMPT_Protocolo
                 }
                 else
                 {
-                    //problema_porta = true;
+                    Console.WriteLine("COM port error: COM closed.");
                 }
 
             }
             if (num_modules == 0 || is_searching == false)
             {
-
-                //this.Invoke((MethodInvoker)delegate
-                //{
-                //    timer_blink_searching.Stop();
-                //    timer_stop_searching.Stop();
-                //    LBL_Searching.Visible = true;
-                //    LBL_Searching.Text = "Modules Found";
-                //    timer_to_enable_next.Start(); // runs on UI thread              
-                //});
+                this.timer_send_knock.Enabled = false;
+                this.timer_send_knock.Dispose();
+                while (true) ; //wait for abort
 
             }
         }

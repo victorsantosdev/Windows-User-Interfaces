@@ -171,6 +171,7 @@
             this.BTN_COM_Close.TabIndex = 12;
             this.BTN_COM_Close.Text = "Close";
             this.BTN_COM_Close.UseVisualStyleBackColor = true;
+            this.BTN_COM_Close.Click += new System.EventHandler(this.BTN_COM_Close_Click);
             // 
             // BTN_Quit_Search
             // 
@@ -203,7 +204,7 @@
             this.LBL_FormDescription_Search.TabIndex = 15;
             this.LBL_FormDescription_Search.Text = "RF Modules Search";
             // 
-            // Searching_Step
+            // ModulesSearch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -226,7 +227,7 @@
             this.Controls.Add(this.TB_SA1_Search);
             this.Controls.Add(this.LBL_Title);
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "Searching_Step";
+            this.Name = "ModulesSearch";
             this.Text = "LMPT LMPT_Protocolo";
             ((System.ComponentModel.ISupportInitialize)(this.PB_UFSC_Icon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PB_LMPT_Icon)).EndInit();
